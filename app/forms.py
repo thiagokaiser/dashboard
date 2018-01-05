@@ -15,7 +15,7 @@ class EditProfileForm(UserChangeForm):
 		)
 
 class RegisterProfileForm(UserCreationForm):
-	email = forms.EmailField(required=True)
+	email = forms.EmailField(required=True)	
 	
 	class Meta:
 		model = User
@@ -36,3 +36,9 @@ class RegisterProfileForm(UserCreationForm):
 
 		if commit:
 			user.save()
+
+	def clean_email(self):
+		email = self.cleaned_data['email']
+		if User.objects.filter(email=email).exists() == True:
+			raise ValidationError("A user with that email already exists.")			
+		return email

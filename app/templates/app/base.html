@@ -98,7 +98,7 @@
                                         <img src="{% static 'img/img-user.jpg' %}" class="img-circle" alt="User Image" />
                                         <p>
                                             {{ user.first_name }} {{ user.last_name }}
-                                            <small>Member since Nov. 2012</small>
+                                            <small>Membro desde {{ user.date_joined }}</small>
                                         </p>
                                     </li>                                                                        
                                     <!-- Menu Footer-->
