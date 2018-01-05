@@ -129,5 +129,15 @@ LOGIN_URL = 'app:login'
 LOGIN_EXEMPT_URLS = (
     r'^app/login/$',
     r'^app/logout/$',
-    r'^app/register/$',
+    r'^app/register/$',    
+    r'^app/reset-password/$',
+    r'^app/reset-password/done/$',
+    r'^app/reset-password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+    r'^app/reset-password/complete/$',
     )
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'thiagokaisersystems@gmail.com'
+EMAIL_HOST_PASSWORD = 'qwe@1234'
+EMAIL_PORT = 587
