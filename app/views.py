@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import (
@@ -18,9 +19,9 @@ from django.contrib.auth.forms import (
 from .forms import (    
     EditProfileForm,
     RegisterProfileForm,    
-    ProfileForm
+    ProfileForm,    
     )
-from .models import Profile
+from .models import Profile, Mensagem
 
 # Create your views here.
 def Home(request):
@@ -88,3 +89,29 @@ def Change_Password(request):
         form = PasswordChangeForm(user=request.user)
         args = {'form': form}
         return render(request, 'accounts/change_password.html', args)
+
+def Inbox(request):        
+    reg_pag           = request.GET.get('reg_pag', 10)        
+    
+    filtro_url = '?reg_pag=' + str(reg_pag)
+    filtro = {'url': filtro_url,              
+              'pag': reg_pag,              
+              }    
+
+    mensagem = Mensagem.objects.all()         
+
+    page    = request.GET.get('page', 1)    
+
+    paginator = Paginator(mensagem, reg_pag)
+    try:
+        pagamentos = paginator.page(page)
+    except PageNotAnInteger:
+        pagamentos = paginator.page(1)
+    except EmptyPage:
+        pagamentos = paginator.page(paginator.num_pages)    
+    
+    return render(request, 'app/inbox.html', {'mensagem': mensagem, 'filtro': filtro})
+
+def Msg_View(request, pk):    
+    mensagem = get_object_or_404(Mensagem, pk=pk)    
+    return render(request, 'app/mensagem_detail.html', {'msg':mensagem})

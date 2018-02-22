@@ -1,0 +1,116 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Inbox
+        <small>Mensagens</small>
+    </h1>                    
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Your Page Content Here -->                    
+
+    <div class="box box-primary">            
+        <div class="box-body">          
+            <form method="GET">
+                <table>
+                    <tr>
+                        <td>
+                            <input class="form-control" pattern="[a-zA-Z0-9]+" type="text" id="input_search" name="input_search" value='{{ filtro.filtro1 }}' placeholder="Descricao ...">
+                        </td>                                            
+                        <td>
+                            <button class="btn btn-default" type="submit" id="btn_filtro"><span class="glyphicon glyphicon-search"></span></button>
+                        </td>
+                        <td>                    
+                            <label for="reg_pag">Registros por pag.</label>
+                            <select class=""  id="reg_pag" name="reg_pag">                
+                                <option value="10">10</option>                                    
+                                <option value="20">20</option>                                    
+                                <option value="50">50</option>                                    
+                                <option value="100">100</option>                
+                            </select>     &nbsp;
+                            <label for="order_pagto">Ordenar por</label>
+                            <select class=""  id="order_pagto" name="order_pagto">                
+                                <option value="orcamento">Data</option>
+                                <option value="descricao">Assunto</option>
+                                <option value="dt_pagto">Remetente</option>                                                        
+                            </select>   
+                        </td>  
+                    </tr>
+                </table>
+            </form>                     
+            <div class="table-responsive">
+                <p><h2>Mensagens</h2></b>
+                <table class="table table-hover" style="width: 100%; max-width: 600px;">                    
+                    {% for msg in mensagem %}
+                        {% if msg.lida == False %}
+                        <tr style="font-weight:bold">
+                        {% else %}
+                        <tr>
+                        {% endif %}                           
+                            <td><input type="checkbox"></td>
+                            <td>{{ msg.assunto | slice:":10"  }}</td>                            
+                            <td>{{ msg.mensagem | slice:":30" }}</td>                                                                                
+                            <td>{{ msg.dt_mensagem }}</td>
+                            
+                        </tr>                    
+                    {% endfor %}
+                </table>        
+            </div>               
+
+            <ul class="pagination">
+                {% if pagamento.has_previous %}
+                    <li><a href="{{ filtro.url }}&page=1"><span class="fa fa-angle-double-left"></span></a></li>
+                    <li><a href="{{ filtro.url }}&page={{ pagamento.previous_page_number }}"><span class="fa fa-angle-left"></span></a></li>
+                {% else %}
+                    <li class="disabled"><span class="fa fa-angle-double-left"></span></li>
+                    <li class="disabled"><span class="fa fa-angle-left"></span></li>
+                {% endif %}
+                {% for page in pagamento.paginator.page_range %}
+                    {% if page >= pagamento.number|add:"-3" and page < pagamento.number %}
+                        <li><a href="{{ filtro.url }}&page={{ page }}">{{ page }}</a></li>
+                    {% endif %}
+                    {% ifequal pagamento.number page %}
+                        <li class="active"><span>{{ pagamento.number }}</span></li>
+                    {% endifequal %}                    
+                    {% if page <= pagamento.number|add:"3" and page > pagamento.number %}
+                        <li><a href="{{ filtro.url }}&page={{ page }}">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if pagamento.has_next %}
+                    <li><a href="{{ filtro.url }}&page={{ pagamento.next_page_number }}"><span class="fa fa-angle-right"></span></a></li>
+                    <li><a href="{{ filtro.url }}&page={{ pagamento.paginator.num_pages }}"><span class="fa fa-angle-double-right"></span></a></li>
+                {% else %}
+                    <li class="disabled"><span class="fa fa-angle-right"></span></li>      
+                    <li class="disabled"><span class="fa fa-angle-double-right"></span></li>
+                {% endif %}                
+            </ul>
+                       
+        </div>
+    </div>               
+</section><!-- /.content -->	
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        
+        $('#id_orcto').multiselect({
+            enableFiltering: true,            
+            maxHeight: 400,            
+        });                    
+    });
+    $('#id_orcto').val('{{ filtro.filtro2 }}'); 
+    $('#reg_pag').change(function() {        
+        
+    });    
+    $('#reg_pag').val('{{ filtro.pag }}'); 
+    $('#order_pagto').val('{{ filtro.order_pagto }}'); 
+
+</script>
+{% endblock javascript %}

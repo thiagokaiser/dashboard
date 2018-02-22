@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile
+from .models import Profile, Mensagem
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
@@ -48,3 +48,12 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('descricao', 'cidade', 'estado')
+
+class MensagemFormView(forms.ModelForm):
+    class Meta:
+        model = Mensagem
+        fields = ('remetente',
+        		  'assunto', 
+        		  'mensagem',
+        		  'dt_mensagem' 		  
+        		  )

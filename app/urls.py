@@ -32,4 +32,6 @@ urlpatterns = [
 												  name='password_reset_confirm'),
     url(r'^reset-password/complete/$', password_reset_complete,{'template_name': 'accounts/reset_password_complete.html'}, 
 												                 name='password_reset_complete'),
+    url(r'^inbox/$', views.Inbox , name='inbox'),
+    url(r'^msg/(?P<pk>\d+)/$', views.Msg_View , name='msg'),
 ]
