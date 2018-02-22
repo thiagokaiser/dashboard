@@ -1,4 +1,5 @@
 from django import forms
+from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
@@ -42,3 +43,8 @@ class RegisterProfileForm(UserCreationForm):
 		if User.objects.filter(email=email).exists() == True:
 			raise ValidationError("A user with that email already exists.")			
 		return email
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('descricao', 'cidade', 'estado')
