@@ -22,17 +22,24 @@ from .forms import (
     ProfileForm,    
     )
 from .models import Profile, Mensagem
+from .funcoes import *
 
 # Create your views here.
 def Home(request):
-	return render(request, 'app/base.html', {})
+    args = header_base(request)    
+    return render(request, 'app/base.html', args)
 
 def Profile(request):
-    args = {'user': request.user,
-            'profile': request.user.profile}
+    args_header = header_base(request)        
+    args_page = {'user': request.user,
+                 'profile': request.user.profile}
+
+    args = {**args_header, **args_page}
     return render(request, 'accounts/profile.html', args)
 
 def Edit_profile(request):
+    args_header = header_base(request)        
+
     if request.method == 'POST':
         user_form = EditProfileForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
@@ -46,51 +53,47 @@ def Edit_profile(request):
     else:
         user_form = EditProfileForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
-    return render(request, 'accounts/edit_profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+
+    args_page = {'user_form': user_form,
+                 'profile_form': profile_form}
+    args = {**args_header, **args_page}
+
+    return render(request, 'accounts/edit_profile.html', args)
 
 def Register(request):
     if request.method == 'POST':
         form = RegisterProfileForm(request.POST)
         if form.is_valid():
-            form.save()
-            
+            form.save()            
             username = request.POST['username']
             password = request.POST['password1']
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('app:profile')            
-                
-        args = {'form': form}
-        return render(request,'accounts/register.html', args)
-        
+                return redirect('app:profile')                    
     else:
         form = RegisterProfileForm()
-        args = {'form': form}
-        return render(request,'accounts/register.html', args)
+
+    args = {'form': form}
+    return render(request,'accounts/register.html', args)
 
 def Change_Password(request):
+    args_header = header_base(request)        
     if request.method == 'POST':
         form = PasswordChangeForm(data=request.POST, user=request.user)
-
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            return redirect('app:profile')
-        else:
-            args = {'form': form}
-            return render(request,'accounts/change_password.html', args)
-
-
+            return redirect('app:profile')        
     else:
         form = PasswordChangeForm(user=request.user)
-        args = {'form': form}
-        return render(request, 'accounts/change_password.html', args)
+
+    args_page = {'form': form}
+    args = {**args_header, **args_page} 
+    return render(request, 'accounts/change_password.html', args)
 
 def Inbox(request):        
+    args_header = header_base(request)    
     reg_pag           = request.GET.get('reg_pag', 10)        
     
     filtro_url = '?reg_pag=' + str(reg_pag)
@@ -98,7 +101,7 @@ def Inbox(request):
               'pag': reg_pag,              
               }    
 
-    mensagem = Mensagem.objects.all()         
+    mensagem = Mensagem.objects.filter(user=request.user)         
 
     page    = request.GET.get('page', 1)    
 
@@ -109,9 +112,17 @@ def Inbox(request):
         pagamentos = paginator.page(1)
     except EmptyPage:
         pagamentos = paginator.page(paginator.num_pages)    
+
+    args_page = {'mensagem': mensagem, 'filtro': filtro}
+    args = {**args_header, **args_page} 
     
-    return render(request, 'app/inbox.html', {'mensagem': mensagem, 'filtro': filtro})
+    return render(request, 'app/inbox.html', args)
 
 def Msg_View(request, pk):    
-    mensagem = get_object_or_404(Mensagem, pk=pk)    
-    return render(request, 'app/mensagem_detail.html', {'msg':mensagem})
+    args_header = header_base(request)    
+    mensagem = get_object_or_404(Mensagem, pk=pk)
+    mensagem.Lida(True)
+    args_page = {'msg': mensagem}
+    args = {**args_header, **args_page} 
+
+    return render(request, 'app/mensagem_detail.html', args)

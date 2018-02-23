@@ -20,10 +20,14 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class Mensagem(models.Model):
-	user       		= models.ForeignKey(User, on_delete=models.CASCADE)
-	remetente  		= models.CharField(max_length=30, blank=True)
-	destinatario 	= models.CharField(max_length=30, blank=True)
-	assunto         = models.CharField(max_length=30, blank=True)
-	mensagem   		= models.TextField(max_length=500, blank=True)
-	dt_mensagem 	= models.DateField(null=True, blank=True)
-	lida            = models.BooleanField(default=False)
+    user       		= models.ForeignKey(User, on_delete=models.CASCADE)
+    remetente  		= models.CharField(max_length=30, blank=True)
+    destinatario 	= models.CharField(max_length=30, blank=True)
+    assunto         = models.CharField(max_length=30, blank=True)
+    mensagem   		= models.TextField(max_length=500, blank=True)
+    dt_mensagem 	= models.DateField(null=True, blank=True)
+    lida            = models.BooleanField(default=False)
+
+    def Lida(self, param):
+        self.lida = param
+        self.save()

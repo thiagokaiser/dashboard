@@ -21,8 +21,6 @@
         <link rel="stylesheet" type="text/css" href="{% static 'app/dist/css/skins/skin-black-light.css' %}" />        
         <!-- Font Awesome Icons -->
         <link rel="stylesheet" type="text/css" href="{% static 'app/font-awesome/css/font-awesome.min.css' %}" />        
-        
-
 
     </head>
 
@@ -55,31 +53,33 @@
                                 <!-- Menu toggle button -->
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-envelope-o"></i>
-                                    <span class="label label-success">1</span>
+                                    <span class="label label-success">{{ num_msgs }}</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="header">Voce tem 1 mensagem</li>
+                                    <li class="header">Voce tem {{ num_msgs }} novas mensagens</li>
                                     <li>
+                                        {% for msg in msgs %}
                                         <!-- inner menu: contains the messages -->
                                         <ul class="menu">
                                             <li><!-- start message -->
-                                                <a href="#">
+                                                <a href="{% url 'app:msg' pk=msg.pk %}">
                                                     <div class="pull-left">
                                                         <!-- User Image -->
                                                         <img src="{% static 'img/img-user.jpg' %}" class="img-circle" alt="User Image" />
                                                     </div>
                                                     <!-- Message title and timestamp -->
                                                     <h4>
-                                                        Titulo
-                                                        <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                                                        {{ msg.assunto | slice:":10"  }}
+                                                        <small><i class="fa fa-clock-o"></i> {{ msg.dt_mensagem }}</small>
                                                     </h4>
                                                     <!-- The message -->
-                                                    <p>Mensagem</p>
+                                                    <p>{{ msg.mensagem | slice:":20" }}</p>
                                                 </a>
                                             </li><!-- end message -->
-                                        </ul><!-- /.menu -->
+                                        </ul><!-- /.menu -->                                        
+                                        {% endfor %}
                                     </li>
-                                    <li class="footer"><a href="#">Ver todas mensagens</a></li>
+                                    <li class="footer"><a href="{% url 'app:inbox' %}">Ver todas mensagens</a></li>
                                 </ul>
                             </li><!-- /.messages-menu -->
 
@@ -177,41 +177,7 @@
                     <!-- Your Page Content Here -->                    
 
                     <div class="box">            
-                        <div class="box-body">
-                            <div class="row">
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                <div class="info-box bg-aqua">
-                                    <span class="info-box-icon"><i class="fa fa-bookmark-o"></i></span>
-
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Pagamentos</span>
-                                        <span class="info-box-number">R$ 41.410,00</span>
-
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: 70%"></div>
-                                        </div>
-                                        <span class="progress-description">
-                                            Total: 50.000,00
-                                        </span>
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                <div class="info-box bg-yellow">
-                                    <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
-
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Faltam</span>
-                                        <span class="info-box-number">638 dias</span>
-                                        
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            
+                        <div class="box-body">                            
                             
 
                         </div>
@@ -241,6 +207,9 @@
         <!-- AdminLTE App -->
         <script type="text/javascript" src="{% static 'app/dist/js/app.min.js' %}"></script>
 
+        {% block javascript %}
+
+        {% endblock javascript %}
         
     </body>
 </html>
