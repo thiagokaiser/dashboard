@@ -95,10 +95,14 @@ def Change_Password(request):
 def Inbox(request):        
     args_header = header_base(request)    
     reg_pag           = request.GET.get('reg_pag', 10)        
+    ordenar           = request.GET.get('ordenar', 10)        
+    buscar            = request.GET.get('buscar', 10)        
     
-    filtro_url = '?reg_pag=' + str(reg_pag)
+    filtro_url = '?reg_pag=' + str(reg_pag) + '&ordenar=' + str(ordenar) + '&buscar=' + str(buscar)
     filtro = {'url': filtro_url,              
               'pag': reg_pag,              
+              'ordenar': ordenar,
+              'buscar': buscar,
               }    
 
     mensagem = Mensagem.objects.filter(user=request.user)         

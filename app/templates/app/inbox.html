@@ -19,8 +19,7 @@
             <div class="table-responsive">                                                   
                 
                 <nav class="navbar navbar-default">
-                    <div class="container-fluid">
-                    <form method="GET">   
+                    <div class="container-fluid">                    
 
                         <div class="navbar-header">
                           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -31,95 +30,55 @@
                           </button>
                           <a class="navbar-brand" href="#">Mensagens</a>
                         </div>
-
                         <!-- Collect the nav links, forms, and other content for toggling -->
+                        
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right">                        
-                        
-                        <li><small>Registros por pag.</small></li>
-                        <li><select class=""  id="reg_pag" name="reg_pag">                
-                            <option value="10">10</option>                                    
-                            <option value="20">20</option>                                    
-                            <option value="50">50</option>                                    
-                            <option value="100">100</option>                
-                        </select></li>                     
-                        <li><small>Ordenar por:</small>
-                        <li><select class=""  id="order_pagto" name="order_pagto">                
-                            <option value="orcamento">Data</option>
-                            <option value="descricao">Assunto</option>
-                            <option value="dt_pagto">Remetente</option>                                                        
-                        </select></li>                       
-                        
-                    
-                        <li><input class="input-sm" pattern="[a-zA-Z0-9]+" type="text" id="input_search" name="input_search" value='{{ filtro.filtro1 }}' placeholder="Buscar..."> </li>                               
-                        <li><button type="submit" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-search"></span></button></li>
-                        </ul>
-                        </div>                            
-                    </form>                                                     
+                            <form class="navbar-form navbar-right" method="GET">                                
+                                <div class="form-group">                                                            
+                                    <small>Registros por pag.</small>
+                                    <select class="input-sm"  id="reg_pag" name="reg_pag">                
+                                        <option value="10">10</option>                                    
+                                        <option value="20">20</option>                                    
+                                        <option value="50">50</option>                                    
+                                        <option value="100">100</option>                
+                                    </select>                                           
+                                </div>                       
+                                <div class="form-group">                            
+                                    <small>Ordenar por:</small>
+                                    <select class="input-sm"  id="ordenar" name="ordenar">                
+                                        <option value="data">Data</option>
+                                        <option value="assunto">Assunto</option>
+                                        <option value="remetente">Remetente</option>                                                        
+                                    </select>                                                  
+                                </div>                        
+                                <div class="form-group">              
+                                    <input class="input-sm" pattern="[a-zA-Z0-9]+" type="text" id="buscar" name="buscar" value='{{ filtro.filtro1 }}' placeholder="Buscar...">
+                                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                                </div>                        
+                            </form>                                                                                                     
+                        </div>                                                                        
                     </div>
                 </nav>
-
-<li><button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></li>
-</button>                
-<li><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button></li>                        
-<li><button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button></li>                    
-
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Brand</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-      <form class="navbar-form navbar-left">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-
-
-
+                <table>
+                    <tr>
+                        <td>
+                            <a type="button" class="btn btn-default btn-sm checkbox-toggle btn-selec-all"><span class="selec-all" value="false"><i class="fa fa-square-o"></i></span></a>                
+                            <a href="{% url 'app:inbox' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></a>
+                            <a href="" type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></a>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Marcar como lido</a></li>
+                                    <li><a href="#">Marcar como não lido</a></li>
+                                    <li><a href="#">Mover para</a></li>                    
+                                </ul>
+                            </div>      
+                        </td>
+                    </tr>
+                </table>          
+                <p/>
 
                 <table class="table table-selectable-multiple" style="width: 100%; max-width: 600px;">                    
                     {% for msg in mensagem %}
@@ -179,7 +138,7 @@
     });
     $(".linhainbox").click(function(e) {
       window.location.href = "/app/msg/" + $(this).closest("tr").attr("id") + "/";
-    });
+    });    
     $(".checkboxinbox").click(function(e) {      
       if ($(this).closest("tr").hasClass("selected")) {
         $(this).closest("tr").removeClass("selected");
@@ -193,9 +152,20 @@
           .prop("checked", true);
       }
     });
+    $(".btn-selec-all").click(function(e) {
+        valor = $(this).val();
+        $(this).val(!valor);
+        if ($(this).val() == true){
+            $(".selec-all")[0].innerHTML = "<i class='fa fa-check-square-o'></i>";                  
+        }
+        else{
+            $(".selec-all")[0].innerHTML = "<i class='fa fa-square-o'></i>";      
+        }      
+    });
 
     $('#reg_pag').val('{{ filtro.pag }}'); 
-    $('#order_pagto').val('{{ filtro.order_pagto }}'); 
+    $('#ordenar').val('{{ filtro.ordenar }}'); 
+    $('#buscar').val('{{ filtro.buscar }}'); 
 
 
 </script>
