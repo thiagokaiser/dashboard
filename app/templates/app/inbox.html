@@ -83,14 +83,14 @@
                 <table class="table table-selectable-multiple" style="width: 100%; max-width: 600px;">                    
                     {% for msg in mensagem %}
                         {% if msg.lida == False %}
-                        <tr style="font-weight:bold" id="{{ msg.pk }}">
+                        <tr class="linhainbox" style="font-weight:bold" id="{{ msg.pk }}">
                         {% else %}
-                        <tr id="{{ msg.pk }}">
+                        <tr class="linhainbox" id="{{ msg.pk }}">
                         {% endif %}                           
                             <td class="checkboxinbox" align=center><input type="checkbox"></td>
-                            <td class="linhainbox">{{ msg.assunto | slice:":10"  }}</td>
-                            <td class="linhainbox">{{ msg.mensagem | slice:":30" }}</td>
-                            <td class="linhainbox">{{ msg.dt_mensagem }}</td>
+                            <td class="colunainbox">{{ msg.assunto | slice:":10"  }}</td>
+                            <td class="colunainbox">{{ msg.mensagem | slice:":30" }}</td>
+                            <td class="colunainbox">{{ msg.dt_mensagem }}</td>
                         </tr>                    
                     {% endfor %}
                 </table>
@@ -136,7 +136,7 @@
     jQuery(document).ready(function(){
         
     });
-    $(".linhainbox").click(function(e) {
+    $(".colunainbox").click(function(e) {
       window.location.href = "/app/msg/" + $(this).closest("tr").attr("id") + "/";
     });    
     $(".checkboxinbox").click(function(e) {      
@@ -156,10 +156,23 @@
         valor = $(this).val();
         $(this).val(!valor);
         if ($(this).val() == true){
-            $(".selec-all")[0].innerHTML = "<i class='fa fa-check-square-o'></i>";                  
+            $(".selec-all")[0].innerHTML = "<i class='fa fa-check-square-o'></i>";                              
+
+            $(".linhainbox").each(function( index ) {
+                $(this).addClass("selected");
+                $(this).find("input[type='checkbox']").prop("checked", true);
+            });
+              
+            
         }
         else{
             $(".selec-all")[0].innerHTML = "<i class='fa fa-square-o'></i>";      
+            $(".checkboxinbox").trigger('click');
+
+            $(".linhainbox").each(function( index ) {
+                $(this).removeClass("selected");
+                $(this).find("input[type='checkbox']").prop("checked", false);
+            });            
         }      
     });
 
