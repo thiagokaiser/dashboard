@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -19,7 +20,8 @@ from django.contrib.auth.forms import (
 from .forms import (    
     EditProfileForm,
     RegisterProfileForm,    
-    ProfileForm,    
+    ProfileForm, 
+    NewMessage,   
     )
 from .models import Profile, Mensagem
 from .funcoes import *
@@ -45,11 +47,11 @@ def Edit_profile(request):
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
-            profile_form.save()
-            #messages.success(request, _('Your profile was successfully updated!'))
+            profile_form.save()            
+            messages.success(request, "Informações atualizadas com sucesso.", extra_tags='alert-success alert-dismissible')
             return redirect('app:profile')
-        #else:
-            #messages.error(request, _('Please correct the error below.'))
+        else:
+            messages.error(request, "Foram preenchidos dados incorretamente.", extra_tags='alert-error alert-dismissible')               
     else:
         user_form = EditProfileForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
@@ -84,7 +86,10 @@ def Change_Password(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
+            messages.success(request, "Informações atualizadas com sucesso.", extra_tags='alert-success alert-dismissible')
             return redirect('app:profile')        
+        else:
+            messages.error(request, "Foram preenchidos dados incorretamente.", extra_tags='alert-error alert-dismissible')               
     else:
         form = PasswordChangeForm(user=request.user)
 
@@ -92,11 +97,11 @@ def Change_Password(request):
     args = {**args_header, **args_page} 
     return render(request, 'accounts/change_password.html', args)
 
-def Inbox(request):        
+def Inbox(request):            
     args_header = header_base(request)    
     reg_pag           = request.GET.get('reg_pag', 10)        
-    ordenar           = request.GET.get('ordenar', 10)        
-    buscar            = request.GET.get('buscar', 10)        
+    ordenar           = request.GET.get('ordenar', 'data')        
+    buscar            = request.GET.get('buscar', '')        
     
     filtro_url = '?reg_pag=' + str(reg_pag) + '&ordenar=' + str(ordenar) + '&buscar=' + str(buscar)
     filtro = {'url': filtro_url,              
@@ -105,19 +110,19 @@ def Inbox(request):
               'buscar': buscar,
               }    
 
-    mensagem = Mensagem.objects.filter(user=request.user)         
+    mensagem = Mensagem.objects.filter(destinatario=request.user).order_by('-dt_mensagem')       
 
     page    = request.GET.get('page', 1)    
 
     paginator = Paginator(mensagem, reg_pag)
     try:
-        pagamentos = paginator.page(page)
+        mensagens = paginator.page(page)
     except PageNotAnInteger:
-        pagamentos = paginator.page(1)
+        mensagens = paginator.page(1)
     except EmptyPage:
-        pagamentos = paginator.page(paginator.num_pages)    
+        mensagens = paginator.page(paginator.num_pages)    
 
-    args_page = {'mensagem': mensagem, 'filtro': filtro}
+    args_page = {'mensagem': mensagens, 'filtro': filtro}
     args = {**args_header, **args_page} 
     
     return render(request, 'app/inbox.html', args)
@@ -129,4 +134,36 @@ def Msg_View(request, pk):
     args_page = {'msg': mensagem}
     args = {**args_header, **args_page} 
 
-    return render(request, 'app/mensagem_detail.html', args)
+    return render(request, 'app/message_detail.html', args)
+
+def New_Msg(request):
+    args_header = header_base(request)    
+    args_page = {'form': NewMessage}
+
+    if request.method == 'POST':
+        form = NewMessage(request.POST)        
+        if form.is_valid():            
+            if "todos" in request.POST:
+                usuarios = User.objects.all()
+                mensagem = form.save(commit=False)                        
+                for destin in usuarios:                    
+                    Mensagem.objects.create(destinatario=destin, 
+                                            remetente=request.user,
+                                            assunto=mensagem.assunto, 
+                                            mensagem=mensagem.mensagem,
+                                            dt_mensagem=timezone.now())
+
+                messages.success(request, "Mensagens enviadas com sucesso.", extra_tags='alert-success alert-dismissible')
+                return redirect('app:inbox')        
+            else:
+                mensagem = form.save(commit=False)    
+                mensagem.dt_mensagem = timezone.now()
+                mensagem.remetente = request.user
+                mensagem.save()
+                messages.success(request, "Mensagem enviada com sucesso.", extra_tags='alert-success alert-dismissible')
+                return redirect('app:inbox')        
+
+
+    args = {**args_header, **args_page} 
+
+    return render(request, 'app/new_message.html', args)

@@ -63,6 +63,7 @@
                     <tr>
                         <td>
                             <a type="button" class="btn btn-default btn-sm checkbox-toggle btn-selec-all"><span class="selec-all" value="false"><i class="fa fa-square-o"></i></span></a>                
+                            <a href="{% url 'app:new_msg' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-file-o" aria-hidden="true"></i></i></a>
                             <a href="{% url 'app:inbox' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></a>
                             <a href="" type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></a>
                         </td>
@@ -97,27 +98,27 @@
             </div>
 
             <ul class="pagination">
-                {% if pagamento.has_previous %}
+                {% if mensagem.has_previous %}
                     <li><a href="{{ filtro.url }}&page=1"><span class="fa fa-angle-double-left"></span></a></li>
-                    <li><a href="{{ filtro.url }}&page={{ pagamento.previous_page_number }}"><span class="fa fa-angle-left"></span></a></li>
+                    <li><a href="{{ filtro.url }}&page={{ mensagem.previous_page_number }}"><span class="fa fa-angle-left"></span></a></li>
                 {% else %}
                     <li class="disabled"><span class="fa fa-angle-double-left"></span></li>
                     <li class="disabled"><span class="fa fa-angle-left"></span></li>
                 {% endif %}
-                {% for page in pagamento.paginator.page_range %}
-                    {% if page >= pagamento.number|add:"-3" and page < pagamento.number %}
+                {% for page in mensagem.paginator.page_range %}
+                    {% if page >= mensagem.number|add:"-3" and page < mensagem.number %}
                         <li><a href="{{ filtro.url }}&page={{ page }}">{{ page }}</a></li>
                     {% endif %}
-                    {% ifequal pagamento.number page %}
-                        <li class="active"><span>{{ pagamento.number }}</span></li>
+                    {% ifequal mensagem.number page %}
+                        <li class="active"><span>{{ mensagem.number }}</span></li>
                     {% endifequal %}                    
-                    {% if page <= pagamento.number|add:"3" and page > pagamento.number %}
+                    {% if page <= mensagem.number|add:"3" and page > mensagem.number %}
                         <li><a href="{{ filtro.url }}&page={{ page }}">{{ page }}</a></li>
                     {% endif %}
                 {% endfor %}
-                {% if pagamento.has_next %}
-                    <li><a href="{{ filtro.url }}&page={{ pagamento.next_page_number }}"><span class="fa fa-angle-right"></span></a></li>
-                    <li><a href="{{ filtro.url }}&page={{ pagamento.paginator.num_pages }}"><span class="fa fa-angle-double-right"></span></a></li>
+                {% if mensagem.has_next %}
+                    <li><a href="{{ filtro.url }}&page={{ mensagem.next_page_number }}"><span class="fa fa-angle-right"></span></a></li>
+                    <li><a href="{{ filtro.url }}&page={{ mensagem.paginator.num_pages }}"><span class="fa fa-angle-double-right"></span></a></li>
                 {% else %}
                     <li class="disabled"><span class="fa fa-angle-right"></span></li>      
                     <li class="disabled"><span class="fa fa-angle-double-right"></span></li>
@@ -161,8 +162,7 @@
             $(".linhainbox").each(function( index ) {
                 $(this).addClass("selected");
                 $(this).find("input[type='checkbox']").prop("checked", true);
-            });
-              
+            });             
             
         }
         else{

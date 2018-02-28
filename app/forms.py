@@ -57,3 +57,11 @@ class MensagemFormView(forms.ModelForm):
         		  'mensagem',
         		  'dt_mensagem' 		  
         		  )
+
+class NewMessage(forms.ModelForm):
+    class Meta:
+        model = Mensagem
+        fields = ('destinatario',
+        		  'assunto', 
+        		  'mensagem',        		  
+        		  )

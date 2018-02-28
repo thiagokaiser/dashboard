@@ -34,4 +34,5 @@ urlpatterns = [
 												                 name='password_reset_complete'),
     url(r'^inbox/$', views.Inbox , name='inbox'),
     url(r'^msg/(?P<pk>\d+)/$', views.Msg_View , name='msg'),
+    url(r'^new_msg/$', views.New_Msg , name='new_msg'),
 ]

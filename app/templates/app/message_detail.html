@@ -16,7 +16,9 @@
 
     <div class="box box-primary">            
         <div class="box-body">          
-            
+            <a href="{% url 'app:inbox' %}" class="btn btn-default">Inbox </a>
+            <a href="{% url 'app:inbox' %}" class="btn btn-default">Deletar </a>
+            <p></p>
             De: {{ msg.remetente }}<br>
             {{ msg.dt_mensagem }}<br><br>
             <div class="form-group">              
