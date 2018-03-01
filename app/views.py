@@ -27,21 +27,18 @@ from .models import Profile, Mensagem
 from .funcoes import *
 
 # Create your views here.
-def Home(request):
-    args = header_base(request)    
+def Home(request):    
+    args = {}
     return render(request, 'app/base.html', args)
 
-def Profile(request):
-    args_header = header_base(request)        
-    args_page = {'user': request.user,
-                 'profile': request.user.profile}
-
-    args = {**args_header, **args_page}
+def Profile(request):    
+    args = {'user': request.user,
+            'profile': request.user.profile}
+    
     return render(request, 'accounts/profile.html', args)
 
 def Edit_profile(request):
-    args_header = header_base(request)        
-
+    
     if request.method == 'POST':
         user_form = EditProfileForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
@@ -56,9 +53,9 @@ def Edit_profile(request):
         user_form = EditProfileForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
 
-    args_page = {'user_form': user_form,
-                 'profile_form': profile_form}
-    args = {**args_header, **args_page}
+    args = {'user_form': user_form,
+            'profile_form': profile_form}
+    
 
     return render(request, 'accounts/edit_profile.html', args)
 
@@ -80,7 +77,7 @@ def Register(request):
     return render(request,'accounts/register.html', args)
 
 def Change_Password(request):
-    args_header = header_base(request)        
+    
     if request.method == 'POST':
         form = PasswordChangeForm(data=request.POST, user=request.user)
         if form.is_valid():
@@ -93,15 +90,13 @@ def Change_Password(request):
     else:
         form = PasswordChangeForm(user=request.user)
 
-    args_page = {'form': form}
-    args = {**args_header, **args_page} 
+    args = {'form': form}    
     return render(request, 'accounts/change_password.html', args)
 
-def Inbox(request):            
-    args_header = header_base(request)    
+def Inbox(request):                            
     reg_pag           = request.GET.get('reg_pag', 10)        
     ordenar           = request.GET.get('ordenar', 'data')        
-    buscar            = request.GET.get('buscar', '')        
+    buscar            = request.GET.get('buscar', '')            
     
     filtro_url = '?reg_pag=' + str(reg_pag) + '&ordenar=' + str(ordenar) + '&buscar=' + str(buscar)
     filtro = {'url': filtro_url,              
@@ -110,7 +105,7 @@ def Inbox(request):
               'buscar': buscar,
               }    
 
-    mensagem = Mensagem.objects.filter(destinatario=request.user).order_by('-dt_mensagem')       
+    mensagem = Mensagem.objects.filter(destinatario=request.user).order_by('-dt_mensagem')           
 
     page    = request.GET.get('page', 1)    
 
@@ -122,24 +117,19 @@ def Inbox(request):
     except EmptyPage:
         mensagens = paginator.page(paginator.num_pages)    
 
-    args_page = {'mensagem': mensagens, 'filtro': filtro}
-    args = {**args_header, **args_page} 
+    args = {'mensagem': mensagens, 'filtro': filtro}
     
+
     return render(request, 'app/inbox.html', args)
 
-def Msg_View(request, pk):    
-    args_header = header_base(request)    
+def Msg_View(request, pk):        
     mensagem = get_object_or_404(Mensagem, pk=pk)
     mensagem.Lida(True)
-    args_page = {'msg': mensagem}
-    args = {**args_header, **args_page} 
-
+    args = {'msg': mensagem}
+    
     return render(request, 'app/message_detail.html', args)
 
-def New_Msg(request):
-    args_header = header_base(request)    
-    args_page = {'form': NewMessage}
-
+def New_Msg(request):    
     if request.method == 'POST':
         form = NewMessage(request.POST)        
         if form.is_valid():            
@@ -161,9 +151,8 @@ def New_Msg(request):
                 mensagem.remetente = request.user
                 mensagem.save()
                 messages.success(request, "Mensagem enviada com sucesso.", extra_tags='alert-success alert-dismissible')
-                return redirect('app:inbox')        
+                return redirect('app:inbox')            
 
-
-    args = {**args_header, **args_page} 
+    args = {'form': NewMessage}
 
     return render(request, 'app/new_message.html', args)
