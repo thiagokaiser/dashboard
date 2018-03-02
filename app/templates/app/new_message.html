@@ -40,9 +40,10 @@
             maxHeight: 400,
         });                    
     });
-    $(".check-todos").click(function(e){                
+    $(".check-todos").click(function(e){        
         $("#id_destinatario").val({{ request.user.id }});
         $("#id_destinatario").multiselect("refresh");           
+        $("#id_destinatario").closest('tr').hide();
     });
 
 </script>

@@ -13,7 +13,33 @@ class EditProfileForm(UserChangeForm):
 		'last_name',
 		'email',
 		'password'
-		)
+		)	
+	def clean_email(self):		
+		email = self.cleaned_data['email']
+		usuario	= User.objects.filter(email=email)
+		usuario = usuario.exclude(pk=self.instance.pk)
+		if usuario.exists() == True:
+			raise ValidationError("A user with that email already exists.")			
+
+		if email == '':
+			raise ValidationError("Email field is required.")
+		
+		return email
+
+	def clean_first_name(self):
+		first_name = self.cleaned_data['first_name']
+		if first_name == '':
+			raise ValidationError("First name field is required.")
+
+		return first_name
+
+	def clean_last_name(self):
+		last_name = self.cleaned_data['last_name']
+		if last_name == '':
+			raise ValidationError("Last name field is required.")
+
+		return last_name
+
 
 class RegisterProfileForm(UserCreationForm):
 	email = forms.EmailField(required=True)	

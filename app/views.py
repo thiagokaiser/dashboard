@@ -37,8 +37,7 @@ def Profile(request):
     
     return render(request, 'accounts/profile.html', args)
 
-def Edit_profile(request):
-    
+def Edit_profile(request):    
     if request.method == 'POST':
         user_form = EditProfileForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
