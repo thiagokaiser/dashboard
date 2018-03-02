@@ -43,7 +43,12 @@
     $(".check-todos").click(function(e){        
         $("#id_destinatario").val({{ request.user.id }});
         $("#id_destinatario").multiselect("refresh");           
-        $("#id_destinatario").closest('tr').hide();
+        if($("#id_destinatario").closest('tr').css("display")!="none"){
+            $("#id_destinatario").closest('tr').attr("style", "display:none");
+        }
+        else{
+            $("#id_destinatario").closest('tr').attr("style", "");
+        }        
     });
 
 </script>
