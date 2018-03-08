@@ -64,7 +64,13 @@
                         <td>
                             <a type="button" class="btn btn-default btn-sm checkbox-toggle btn-selec-all"><span class="selec-all" value="false"><i class="fa fa-square-o"></i></span></a>                
                             <a href="{% url 'app:new_msg' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-file-o" aria-hidden="true"></i></i></a>
-                            <a id="bt-del" href="" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></a>
+                            <a id="bt-del" href="" type="button" class="btn btn-default btn-sm"                                
+                               data-toggle="confirmation" data-placement="bottom"
+                               data-btn-ok-label="Confirmar" data-btn-ok-icon="glyphicon glyphicon-share-alt"
+                               data-btn-ok-class="btn-success"
+                               data-btn-cancel-label="Cancelar" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"
+                               data-btn-cancel-class="btn-danger"
+                               data-title="Tem certeza?" data-content="A mensagem será excluida permanentemente."><i class="fa fa-trash-o"></i></a>
                             <a href="{% url 'app:inbox' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></a>
                         </td>
                         <td>&nbsp;</td>
@@ -80,21 +86,22 @@
                     </tr>
                 </table>          
                 <p/>
-
-                <table class="table table-selectable-multiple" style="width: 100%; max-width: 600px;">                    
-                    {% for msg in mensagem %}
-                        {% if msg.lida == False %}
-                        <tr class="linhainbox" style="font-weight:bold" id="{{ msg.pk }}">
-                        {% else %}
-                        <tr class="linhainbox" id="{{ msg.pk }}">
-                        {% endif %}                           
-                            <td class="checkboxinbox" align=center><input type="checkbox"></td>
-                            <td class="colunainbox">{{ msg.assunto | slice:":10"  }}</td>
-                            <td class="colunainbox">{{ msg.mensagem | slice:":30" }}</td>
-                            <td class="colunainbox">{{ msg.dt_mensagem }}</td>
-                        </tr>                    
-                    {% endfor %}
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-selectable-multiple" style="width: 100%;">                    
+                        {% for msg in mensagem %}
+                            {% if msg.lida == False %}
+                            <tr class="linhainbox" style="font-weight:bold" id="{{ msg.pk }}">
+                            {% else %}
+                            <tr class="linhainbox" id="{{ msg.pk }}">
+                            {% endif %}                           
+                                <td class="checkboxinbox" align="center" style="width:45px;"><input type="checkbox"></td>
+                                <td class="colunainbox">{{ msg.remetente | slice:":10"  }}</td>
+                                <td class="colunainbox">{{ msg.assunto | slice:":25"  }} <span style="color:gray;"> - {{ msg.mensagem | slice:":60" }}</span></td>
+                                <td align="right" class="colunainbox">{{ msg.dt_mensagem }}</td>
+                            </tr>                    
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
 
             <ul class="pagination">
@@ -136,23 +143,25 @@
     
     $(document).ready(function(){
         
-    });
-    $("#bt-del").click(function(e){
-        e.preventDefault();
-        var msgs_lista = [];
-        $(".selected").each(function(index) {                        
-            msgs_lista.push($(this).attr('id'));             
-        });        
-        $.ajax({
-            url:"{% url 'app:del_msg' %}",
-            type: "POST",            
-            data: {msgs_list: msgs_lista, csrfmiddlewaretoken: '{{ csrf_token }}'},
-            success:function(response){
-                window.location.reload();
-            },
-            complete:function(){},
-            error:function (xhr, textStatus, thrownError){}
-        });
+    });    
+    $('#bt-del').confirmation({
+        rootSelector: '[data-toggle=confirmation]',
+        onConfirm: function () {
+            var msgs_lista = [];        
+            $(".selected").each(function(index) {                        
+                msgs_lista.push($(this).attr('id'));             
+            });        
+            $.ajax({
+                url:"{% url 'app:del_msg' %}",
+                type: "POST",            
+                data: {msgs_list: msgs_lista, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                success:function(response){
+                window.location.href= "{% url 'app:inbox' %}"
+                },
+                complete:function(){},
+                error:function (xhr, textStatus, thrownError){}
+            });
+        }
     });
     $("#bt-lido").click(function(e){
         e.preventDefault();

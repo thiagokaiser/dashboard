@@ -151,8 +151,11 @@ def New_Msg(request):
                 mensagem.save()
                 messages.success(request, "Mensagem enviada com sucesso.", extra_tags='alert-success alert-dismissible')
                 return redirect('app:inbox')            
+    else:
+        form = NewMessage()
 
-    args = {'form': NewMessage}
+
+    args = {'form': form}
 
     return render(request, 'app/new_message.html', args)
 
@@ -162,7 +165,7 @@ def Del_Msg(request):
             msg_list = request.POST.getlist('msgs_list[]')            
             for i in msg_list:
                 mensagem = Mensagem.objects.get(pk=i)
-                mensagem.delete()            
+                #mensagem.delete()            
             messages.success(request, "Mensagens excluidas com sucesso.", extra_tags='alert-success alert-dismissible')            
         else:
             messages.error(request, "Nenhuma mensagem selecionada.", extra_tags='alert-error alert-dismissible')               
