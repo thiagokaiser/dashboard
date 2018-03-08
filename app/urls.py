@@ -35,4 +35,7 @@ urlpatterns = [
     url(r'^inbox/$', views.Inbox , name='inbox'),
     url(r'^msg/(?P<pk>\d+)/$', views.Msg_View , name='msg'),
     url(r'^new_msg/$', views.New_Msg , name='new_msg'),
+    url(r'^del_msg/$', views.Del_Msg , name='del_msg'),    
+    url(r'^read_msg/$', views.Read_Msg , name='read_msg'),    
+    url(r'^unread_msg/$', views.Unread_Msg , name='unread_msg'),    
 ]

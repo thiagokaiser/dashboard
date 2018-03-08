@@ -155,3 +155,42 @@ def New_Msg(request):
     args = {'form': NewMessage}
 
     return render(request, 'app/new_message.html', args)
+
+def Del_Msg(request):    
+    if request.POST and request.is_ajax():        
+        if request.POST.getlist('msgs_list[]'):
+            msg_list = request.POST.getlist('msgs_list[]')            
+            for i in msg_list:
+                mensagem = Mensagem.objects.get(pk=i)
+                mensagem.delete()            
+            messages.success(request, "Mensagens excluidas com sucesso.", extra_tags='alert-success alert-dismissible')            
+        else:
+            messages.error(request, "Nenhuma mensagem selecionada.", extra_tags='alert-error alert-dismissible')               
+
+    return HttpResponse('')
+
+def Read_Msg(request):    
+    if request.POST and request.is_ajax():        
+        if request.POST.getlist('msgs_list[]'):
+            msg_list = request.POST.getlist('msgs_list[]')            
+            for i in msg_list:
+                mensagem = Mensagem.objects.get(pk=i)
+                mensagem.Lida(True)         
+            messages.success(request, "Mensagens alteradas com sucesso.", extra_tags='alert-success alert-dismissible')            
+        else:
+            messages.error(request, "Nenhuma mensagem selecionada.", extra_tags='alert-error alert-dismissible')               
+
+    return HttpResponse('')
+
+def Unread_Msg(request):    
+    if request.POST and request.is_ajax():        
+        if request.POST.getlist('msgs_list[]'):
+            msg_list = request.POST.getlist('msgs_list[]')            
+            for i in msg_list:
+                mensagem = Mensagem.objects.get(pk=i)
+                mensagem.Lida(False)         
+            messages.success(request, "Mensagens alteradas com sucesso.", extra_tags='alert-success alert-dismissible')            
+        else:
+            messages.error(request, "Nenhuma mensagem selecionada.", extra_tags='alert-error alert-dismissible')               
+
+    return HttpResponse('')

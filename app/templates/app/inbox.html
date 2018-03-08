@@ -64,16 +64,16 @@
                         <td>
                             <a type="button" class="btn btn-default btn-sm checkbox-toggle btn-selec-all"><span class="selec-all" value="false"><i class="fa fa-square-o"></i></span></a>                
                             <a href="{% url 'app:new_msg' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-file-o" aria-hidden="true"></i></i></a>
-                            <a href="{% url 'app:inbox' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></a>
-                            <a href="" type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></a>
+                            <a id="bt-del" href="" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></a>
+                            <a href="{% url 'app:inbox' %}" type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></a>
                         </td>
-                        <td>
+                        <td>&nbsp;</td>
+                        <td>                            
                             <div class="dropdown">
                                 <button href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Marcar como lido</a></li>
-                                    <li><a href="#">Marcar como não lido</a></li>
-                                    <li><a href="#">Mover para</a></li>                    
+                                    <li><a id="bt-lido" href="#">Marcar como lido</a></li>
+                                    <li><a id="bt-nao-lido" href="#">Marcar como não lido</a></li>                                    
                                 </ul>
                             </div>      
                         </td>
@@ -134,9 +134,62 @@
 {% block javascript %}
 <script type="text/javascript">    
     
-    jQuery(document).ready(function(){
+    $(document).ready(function(){
         
     });
+    $("#bt-del").click(function(e){
+        e.preventDefault();
+        var msgs_lista = [];
+        $(".selected").each(function(index) {                        
+            msgs_lista.push($(this).attr('id'));             
+        });        
+        $.ajax({
+            url:"{% url 'app:del_msg' %}",
+            type: "POST",            
+            data: {msgs_list: msgs_lista, csrfmiddlewaretoken: '{{ csrf_token }}'},
+            success:function(response){
+                window.location.reload();
+            },
+            complete:function(){},
+            error:function (xhr, textStatus, thrownError){}
+        });
+    });
+    $("#bt-lido").click(function(e){
+        e.preventDefault();
+        var msgs_lista = [];
+        $(".selected").each(function(index) {                        
+            msgs_lista.push($(this).attr('id'));             
+        });        
+        $.ajax({
+            url:"{% url 'app:read_msg' %}",
+            type: "POST",            
+            data: {msgs_list: msgs_lista, csrfmiddlewaretoken: '{{ csrf_token }}'},
+            success:function(response){
+                window.location.reload();
+            },
+            complete:function(){},
+            error:function (xhr, textStatus, thrownError){}
+        });
+    });
+    $("#bt-nao-lido").click(function(e){
+        e.preventDefault();
+        var msgs_lista = [];
+        $(".selected").each(function(index) {                        
+            msgs_lista.push($(this).attr('id'));             
+        });        
+        $.ajax({
+            url:"{% url 'app:unread_msg' %}",
+            type: "POST",            
+            data: {msgs_list: msgs_lista, csrfmiddlewaretoken: '{{ csrf_token }}'},
+            success:function(response){
+                window.location.reload();
+            },
+            complete:function(){},
+            error:function (xhr, textStatus, thrownError){}
+        });
+    });
+
+
     $(".colunainbox").click(function(e) {
       window.location.href = "/app/msg/" + $(this).closest("tr").attr("id") + "/";
     });    
@@ -178,8 +231,7 @@
 
     $('#reg_pag').val('{{ filtro.pag }}'); 
     $('#ordenar').val('{{ filtro.ordenar }}'); 
-    $('#buscar').val('{{ filtro.buscar }}'); 
-
+    $('#buscar').val('{{ filtro.buscar }}');     
 
 </script>
 {% endblock javascript %}
