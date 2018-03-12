@@ -165,7 +165,7 @@ def Del_Msg(request):
             msg_list = request.POST.getlist('msgs_list[]')            
             for i in msg_list:
                 mensagem = Mensagem.objects.get(pk=i)
-                #mensagem.delete()            
+                mensagem.delete()            
             messages.success(request, "Mensagens excluidas com sucesso.", extra_tags='alert-success alert-dismissible')            
         else:
             messages.error(request, "Nenhuma mensagem selecionada.", extra_tags='alert-error alert-dismissible')               
