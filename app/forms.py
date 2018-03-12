@@ -3,17 +3,19 @@ from .models import Profile, Mensagem
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
+from .fields import RestrictedFileField
 
 class EditProfileForm(UserChangeForm):
-	password = ReadOnlyPasswordHashField()
+	password = ReadOnlyPasswordHashField()	
 	class Meta:
 		model = User
 		fields = (
 		'first_name',
 		'last_name',
 		'email',
-		'password'
+		'password'		
 		)	
+
 	def clean_email(self):		
 		email = self.cleaned_data['email']
 		usuario	= User.objects.filter(email=email)
@@ -39,7 +41,6 @@ class EditProfileForm(UserChangeForm):
 
 class RegisterProfileForm(UserCreationForm):
 	email = forms.EmailField(required=True)	
-	
 	class Meta:
 		model = User
 		fields = (
@@ -67,9 +68,13 @@ class RegisterProfileForm(UserCreationForm):
 		return email
 
 class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ('descricao', 'cidade', 'estado')
+	foto_perfil = RestrictedFileField(content_types=['image/jpeg','image/png', 'application/pdf'],
+									  max_upload_size=1600000, 
+									  required=False,									  
+									  help_text='Arquivos válidos: jpg, png, pdf. Tamanho máximo: 1.5mb')
+	class Meta:
+		model = Profile
+		fields = ('descricao', 'cidade', 'estado','foto_perfil')
 
 class MensagemFormView(forms.ModelForm):
     class Meta:

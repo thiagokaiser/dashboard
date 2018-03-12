@@ -9,6 +9,7 @@ class Profile(models.Model):
     cidade 			= models.CharField(max_length=30, blank=True)
     estado 			= models.CharField(max_length=2, blank=True)
     dt_nascimento 	= models.DateField(null=True, blank=True)
+    foto_perfil     = models.FileField(upload_to='perfil/', blank=True, null=True)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
