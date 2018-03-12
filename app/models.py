@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import os
 
 class Profile(models.Model):
     user 			= models.OneToOneField(User, on_delete=models.CASCADE)
@@ -19,6 +20,30 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+##########  deletar foto do perfil antiga ##########
+@receiver(models.signals.post_delete, sender=Profile)
+def delete_file_on_del_profile(sender, instance, **kwargs):    
+    if instance.foto_perfil:
+        if os.path.isfile(instance.foto_perfil.path):
+            os.remove(instance.foto_perfil.path)
+
+@receiver(models.signals.pre_save, sender=Profile)
+def delete_file_on_change_profile(sender, instance, **kwargs):    
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = Profile.objects.get(pk=instance.pk).foto_perfil
+    except Profile.DoesNotExist:
+        return False
+
+    new_file = instance.foto_perfil    
+    if not old_file == new_file:
+        if old_file:
+            if os.path.isfile(old_file.path):
+                os.remove(old_file.path)
+######################################################
 
 class Mensagem(models.Model):
     destinatario	= models.ForeignKey(User, on_delete=models.CASCADE)

@@ -23,7 +23,11 @@
             <p> Descrição: {{ profile.descricao }} </p>
             <p> Cidade: {{ profile.cidade }} </p>
             <p> Estado: {{ profile.estado }} </p>
-            <p> Foto: <a href="{{ profile.foto_perfil.url }}">{{ profile.foto_perfil }}</a> </p>
+            {% if profile.foto_perfil %}
+                <p> Foto: <a href="{{ profile.foto_perfil.url }}">{{ profile.foto_perfil }}</a> </p>
+            {% else %}
+                <p> Foto: </p>
+            {% endif %}
 			<br>
 			<a class="btn btn-default" href="{% url 'app:edit_profile' %}">Editar Perfil</a>
 			<a class="btn btn-default" href="{% url 'app:change_password' %}">Alterar Senha</span></a>         
