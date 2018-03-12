@@ -94,7 +94,7 @@ def Change_Password(request):
 
 def Inbox(request):                            
     reg_pag           = request.GET.get('reg_pag', 10)        
-    ordenar           = request.GET.get('ordenar', 'data')        
+    ordenar           = request.GET.get('ordenar', '-dt_mensagem')        
     buscar            = request.GET.get('buscar', '')            
     
     filtro_url = '?reg_pag=' + str(reg_pag) + '&ordenar=' + str(ordenar) + '&buscar=' + str(buscar)
@@ -104,7 +104,7 @@ def Inbox(request):
               'buscar': buscar,
               }    
 
-    mensagem = Mensagem.objects.filter(destinatario=request.user).order_by('-dt_mensagem')           
+    mensagem = Mensagem.objects.filter(destinatario=request.user).filter(mensagem__contains=buscar).order_by(ordenar)               
 
     page    = request.GET.get('page', 1)    
 
