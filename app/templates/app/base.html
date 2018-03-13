@@ -67,14 +67,18 @@
                                                 <a href="{% url 'app:msg' pk=msg.pk %}">
                                                     <div class="pull-left">
                                                         <!-- User Image -->
-                                                        <img src="{% static 'img/img-user.jpg' %}" class="img-circle" alt="User Image" />
+                                                        {% if msg.foto %}
+                                                            <img src="{{ msg.foto }}" class="img-circle" alt="User Image" />
+                                                        {% else %}
+                                                            <img src="{% static 'img/img-user.jpg' %}" class="img-circle" alt="User Image" />
+                                                        {% endif %}
                                                     </div>
                                                     <!-- Message title and timestamp -->                                                    
                                                     <h4>
                                                         {% if msg.lida == False %}
                                                         <span style="font-weight: bold;">
                                                         {% endif %}
-                                                        {{ msg.assunto | slice:":10"  }}
+                                                        {{ msg.assunto | slice:":7"  }}
                                                         {% if msg.lida == False %}
                                                         </span>
                                                         {% endif %}
