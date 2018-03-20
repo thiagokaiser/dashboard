@@ -197,3 +197,9 @@ def Unread_Msg(request):
             messages.error(request, "Nenhuma mensagem selecionada.", extra_tags='alert-error alert-dismissible')               
 
     return HttpResponse('')
+
+def Side_Menu(request):
+    if request.session.get('menu_aberto') != '':
+        request.session['menu_aberto'] = not(request.session.get('menu_aberto'))
+
+    return HttpResponse('')

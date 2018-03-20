@@ -38,4 +38,5 @@ urlpatterns = [
     url(r'^del_msg/$', views.Del_Msg , name='del_msg'),    
     url(r'^read_msg/$', views.Read_Msg , name='read_msg'),    
     url(r'^unread_msg/$', views.Unread_Msg , name='unread_msg'),    
+    url(r'^side_menu/$', views.Side_Menu , name='side_menu'),    
 ]
