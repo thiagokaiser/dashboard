@@ -18,16 +18,18 @@
         <!-- CSS TEMPLATE -->
         <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}" />
         <!-- CSS Tema azul -->
-        <link rel="stylesheet" type="text/css" href="{% static 'app/dist/css/skins/skin-black-light.css' %}" />        
+        <link rel="stylesheet" type="text/css" href="{% static 'app/dist/css/skins/' %}{{ user.profile.layoutskin.nome_css }}.css "/>        
         <!-- Font Awesome Icons -->
         <link rel="stylesheet" type="text/css" href="{% static 'app/font-awesome/css/font-awesome.min.css' %}" />     
         <!-- Multiselect personalizado -->
-        <link rel="stylesheet" type="text/css" href="{% static 'app/bootstrap-multiselect/dist/css/bootstrap-multiselect.css' %}" />                  
+        <link rel="stylesheet" type="text/css" href="{% static 'app/plugins/bootstrap-select/dist/css/bootstrap-select.css' %}" /> 
+
+        <link rel="stylesheet" type="text/css" href="{% static 'app/plugins/datatables/dataTables.bootstrap.css' %}" />                 
 
     </head>
 
 
-    <body class="skin-black-light sidebar-mini {% if request.session.menu_aberto %} sidebar-collapse {% endif %}">
+    <body class="{{ user.profile.layoutskin.nome_css }} sidebar-mini {% if request.session.menu_aberto %} sidebar-collapse {% endif %}">
 
         <div class="wrapper">
             <!-- Main Header -->
@@ -155,7 +157,8 @@
                     <ul class="sidebar-menu">
                         <li class="header">Menu</li>
                         <!-- Optionally, you can add icons to the links -->
-                        <li class="active"><a href="{% url 'app:home' %}"><i class="fa fa-home"></i> <span>Home</span></a></li>
+                        <li><a href="{% url 'app:home' %}"><i class="fa fa-home"></i> <span>Home</span></a></li>                        
+                        <hr style="margin:1px" />                        
                         <!--
                         <li class="treeview">
                             <a href="#"><i class="fa fa-edit"></i> <span>Cadastros</span> <i class="fa fa-angle-left pull-right"></i></a>
@@ -197,7 +200,7 @@
                 {% if messages %}                
                 {% for message in messages %}
                 <div class="mensagem {{ message.tags }}" style="padding: 10px 20px; background: rgb(243, 156, 18); z-index: 999999; font-size: 16px; font-weight: 600;">
-                    <a class="pull-right fecha-msg" href="#" data-toggle="tooltip" data-placement="left" title="" style="color: rgb(255, 255, 255); font-size: 20px;" data-original-title="Fechar!">&times;</a>
+                    <a class="pull-right fecha-msg" href="" data-toggle="tooltip" data-placement="left" title="" style="color: rgb(255, 255, 255); font-size: 16px;" data-original-title="Fechar!">&times;</a>                    
                     {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
                     <i class="icon fa fa-ban"></i>
                     {% endif %}
@@ -209,7 +212,16 @@
                     
                 </div>
                 {% endfor %}
-                {% endif %}
+                {% endif %}                
+
+                <div class="modal fade loading-modal" tabindex="-1" role="dialog" id="loadingdiv" data-backdrop="false" data-keyboard="false" style="padding-top: 90px;">                    
+                    <div class="modal-dialog loading-modal" role="document">                        
+                        <div class="loading-modal" style="display:inline-block;">
+                            <div class="loader">
+                            </div>                                                                      
+                        </div>                                                
+                    </div>
+                </div>                    
 
                 {% block content %}
                 <!-- Content Header (Page header) -->
@@ -219,14 +231,11 @@
                         <small>ola mundo</small>
                     </h1>                    
                 </section>
-
                 <!-- Main content -->
                 <section class="content">
                     <!-- Your Page Content Here -->                    
-
                     <div class="box">            
-                        <div class="box-body">                            
-                            
+                        <div class="box-body">                                                        
 
                         </div>
                     </div>                    
@@ -249,20 +258,28 @@
         <!-- REQUIRED JS SCRIPTS -->
 
         <!-- jQuery 2.1.4 -->
-        <script type="text/javascript" src="{% static 'app/plugins/jQuery/jQuery-2.1.4.min.js' %}" ></script>
+        <script type="text/javascript" src="{% static 'app/plugins/jQuery/jquery-3.3.1.min.js' %}" ></script>
         <!-- Bootstrap 3.3.2 JS -->
-        <script type="text/javascript" src="{% static 'app/bootstrap/js/bootstrap.js' %}"></script>
+        <script type="text/javascript" src="{% static 'app/bootstrap/js/bootstrap.js' %}"></script>        
         <!-- AdminLTE App -->
         <script type="text/javascript" src="{% static 'app/dist/js/app.min.js' %}"></script>
         <!-- Multiselect personalizado -->
-        <script type="text/javascript" src="{% static 'app/bootstrap-multiselect/dist/js/bootstrap-multiselect.js' %}" ></script>
+        <script type="text/javascript" src="{% static 'app/plugins/bootstrap-select/dist/js/bootstrap-select.js' %}" ></script>
         
         <script type="text/javascript" src="{% static 'app/bootstrap-confirmation/bootstrap-confirmation.js' %}" ></script>                
-
+        <!-- fileDownload -->
+        <script type="text/javascript" src="{% static 'app/plugins/filedownload/jquery.fileDownload.js' %}" ></script>                
+        
         <script type="text/javascript">
+            $('#loadingdiv').modal();
+            $(window).on('load', function(){ 
+                $('#loadingdiv').modal("hide"); 
+            });                          
+
             $(".fecha-msg").click(function(e){    
                 $(".mensagem").remove();
             });
+
             $('.sidebar-toggle').click(function(e){
                 $.ajax({
                     url:"{% url 'app:side_menu' %}",
@@ -273,6 +290,15 @@
                     complete:function(){},
                     error:function (xhr, textStatus, thrownError){}
                 });                
+            });
+
+            $(document).on({
+                ajaxStart: function () {                                
+                    $('#loadingdiv').modal(); 
+                },
+                ajaxStop: function() {
+                  $('#loadingdiv').modal("hide"); 
+                }
             });
 
         </script>

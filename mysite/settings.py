@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,6 +26,19 @@ SECRET_KEY = '88&1q#vge^5k6d$_0@o79)5dyee(1k8)mbj6%29nb5=v*yao-4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+if socket.gethostname() == 'DESKTOP-MD82F1I':
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    DEBUG = True
+else:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    DEBUG = True
+
+
+
 ALLOWED_HOSTS = ['kaiserz.pythonanywhere.com',
                  '127.0.0.1'
                 ]
@@ -32,7 +46,7 @@ ALLOWED_HOSTS = ['kaiserz.pythonanywhere.com',
 # Application definition
 
 INSTALLED_APPS = [
-    'app.apps.AppConfig',
+    'app.apps.AppConfig',    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,8 +93,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ConsultorioDjango',
+        'USER': 'postgres',
+        'PASSWORD': 'mypass',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -146,12 +164,35 @@ LOGIN_EXEMPT_URLS = (
     r'^app/reset-password/complete/$',
     )
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'thiagokaisersystems@gmail.com'
+EMAIL_USE_TLS = False
+EMAIL_HOST = 'smtp.hostinger.com.br'
+EMAIL_HOST_USER = 'contato@thiagokaiser.com.br'
 EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'contato@thiagokaiser.com.br'
+SERVER_EMAIL = 'contato@thiagokaiser.com.br'
 
 try:
     from .settings_passwords import *
 except ImportError:
     pass
+
+"""
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'c:/temp/debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+"""
